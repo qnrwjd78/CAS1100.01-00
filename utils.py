@@ -3,12 +3,7 @@ from typing import Dict, Tuple, Union
 
 import numpy as np
 import pandas as pd
-
-try:
-    from scipy import stats  # type: ignore
-    HAS_SCIPY = True
-except ImportError:
-    HAS_SCIPY = False
+from scipy import stats
 
 
 def load_merged(path: Union[str, Path] = "data/merged_sampled.csv") -> pd.DataFrame:
