@@ -1,10 +1,10 @@
 # Steam Game Data Analysis Project
 
-이 프로젝트는 Steam 게임 데이터를 수집 및 분석하여 개발자에게 유용한 인사이트를 도출하는 
+이 프로젝트는 Steam 게임 데이터를 수집 및 분석하여 개발자에게 도움이 되는 질문에 대한 결과를 도출하는 프로젝트입니다.
 
 ## 1. 환경 설정 (Installation)
 
-Anaconda를 사용하여 가상환경을 생성하고 필요한 패키지를 설치하는 것을 권장합니다.
+Miniconda를 사용하여 가상환경을 생성하고 필요한 패키지를 설치합니다.
 
 ### 1.1 Conda 환경 생성 및 활성화
 ```bash
@@ -37,6 +37,8 @@ pip install -r requirements.txt
      ├── ...
      ```
    - *참고: `data/reviews` 폴더가 없다면 직접 생성해주세요.*
+
+- *만약 데이터 셋이 없다면 미리 전처리 해둔 data/merged_sampled.csv를 사용할 수 있습니다.*
 
 ## 3. 실행 방법 (Usage)
 
