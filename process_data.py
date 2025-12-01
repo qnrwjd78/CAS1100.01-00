@@ -1,5 +1,5 @@
 """
-Answer 10 developer-oriented questions using merged_sampled.csv.
+Answer 6 developer-oriented questions using merged_sampled.csv.
 
 Each question has one function. Results are saved to data/analysis_results.json.
 """
@@ -14,7 +14,7 @@ from utils import add_features, cohen_d, load_merged, mannwhitney_p, simple_regr
 
 # Q1 최적 출시가 구간은?
 def q1_optimal_price_bucket(df: pd.DataFrame) -> Dict[str, object]:
-    grouped = df.groupby("price_bucket")["positive_ratio"].agg(["mean", "count"])
+    grouped = df.groupby("price_bucket", observed=False)["positive_ratio"].agg(["mean", "count"])
     bucket_vs_rest = {}
     for bucket, _ in grouped.iterrows():
         in_b = df[df["price_bucket"] == bucket]["positive_ratio"]
@@ -67,56 +67,6 @@ def q6_scale_effect_on_sentiment(df: pd.DataFrame) -> Dict[str, float]:
     return {"corr": round(float(corr), 4) if pd.notna(corr) else None}
 
 
-# Q7 업데이트/패치 빈도의 효과는?
-def q7_update_cadence_effect(df: pd.DataFrame) -> Dict[str, float]:
-    if "update_count" not in df.columns:
-        return {"corr_updates_positive": None, "corr_gap_positive": None}
-    mask1 = df["update_count"].notna() & df["positive_ratio"].notna()
-    corr_updates = df.loc[mask1, ["update_count", "positive_ratio"]].corr().iloc[0, 1] if mask1.any() else np.nan
-    mask2 = df["max_update_gap"].notna() & df["positive_ratio"].notna()
-    corr_gap = df.loc[mask2, ["max_update_gap", "positive_ratio"]].corr().iloc[0, 1] if mask2.any() else np.nan
-    return {
-        "corr_updates_positive": round(float(corr_updates), 4) if pd.notna(corr_updates) else None,
-        "corr_gap_positive": round(float(corr_gap), 4) if pd.notna(corr_gap) else None,
-    }
-
-
-# Q8 커뮤니티 활동이 평점에 주는 영향은?
-def q8_community_effect(df: pd.DataFrame) -> Dict[str, float]:
-    if "community_posts" not in df.columns:
-        return {"corr_comm_positive": None, "mean_high": None, "mean_low": None}
-    mask = df["community_posts"].notna() & df["positive_ratio"].notna()
-    if not mask.any():
-        return {"corr_comm_positive": None, "mean_high": None, "mean_low": None}
-    corr = df.loc[mask, ["community_posts", "positive_ratio"]].corr().iloc[0, 1]
-    median_posts = df.loc[mask, "community_posts"].median()
-    high = df.loc[mask & (df["community_posts"] >= median_posts), "positive_ratio"]
-    low = df.loc[mask & (df["community_posts"] < median_posts), "positive_ratio"]
-    return {
-        "corr_comm_positive": round(float(corr), 4) if pd.notna(corr) else None,
-        "mean_high": round(high.mean(), 2) if not high.empty else None,
-        "mean_low": round(low.mean(), 2) if not low.empty else None,
-    }
-
-
-# Q9 위험 타이틀 조기 식별
-def q9_risky_titles(df: pd.DataFrame, min_reviews: int = 5, price_threshold: float = 15.0, rating_threshold: float = 60.0, top_n: int = 10) -> List[Dict[str, object]]:
-    subset = df[
-        (df["release_price"] >= price_threshold)
-        & (df["positive_ratio"] <= rating_threshold)
-        & (df["review_count"] >= min_reviews)
-    ]
-    cols = ["app_id", "release_price", "positive_ratio", "review_count"]
-    return subset[cols].sort_values("positive_ratio").head(top_n).round(2).to_dict(orient="records")
-
-
-# Q10 벤치마크 타이틀 추천
-def q10_benchmark_titles(df: pd.DataFrame, min_reviews: int = 20, top_n: int = 10) -> List[Dict[str, object]]:
-    subset = df[df["review_count"] >= min_reviews].sort_values("positive_ratio", ascending=False)
-    cols = ["app_id", "positive_ratio", "review_count", "release_price"]
-    return subset[cols].head(top_n).round(2).to_dict(orient="records")
-
-
 QUESTION_FUNCS = [
     q1_optimal_price_bucket,
     q2_review_speed_targets,
@@ -124,10 +74,6 @@ QUESTION_FUNCS = [
     q4_price_effect_on_sentiment,
     q5_playtime_effect_on_sentiment,
     q6_scale_effect_on_sentiment,
-    q7_update_cadence_effect,
-    q8_community_effect,
-    q9_risky_titles,
-    q10_benchmark_titles,
 ]
 
 

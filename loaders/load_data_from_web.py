@@ -141,5 +141,5 @@ def fetch_meta_web(app_ids: Iterable[int], delay: float = 1.0, limit: Optional[i
             pass
         rows.append(base)
         if idx % 10 == 0:
-            print(f"[WEB] {idx}/{len(ids_series)} processed")
+            print(f"[WEB] {idx}/{len(ids_series)}")
     return pd.DataFrame(rows)

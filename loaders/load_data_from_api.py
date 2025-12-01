@@ -108,12 +108,12 @@ def fetch_meta_api(
             records.append(base)
             kept += 1
         if idx % progress_every == 0:
-            print(f"[API] {idx}/{len(app_ids)} processed: {kept} kept")
+            print(f"[API] {idx}/{len(app_ids)} 완료: {kept} 유지")
         if target is not None and kept >= target:
-            print(f"[API] Reached target {target}, stopping early.")
+            print(f"[API] 목표 {target} 도달, 조기 종료.")
             break
 
-    print(f"[API] saved {kept}, total processed {idx}.")
+    print(f"[API] 저장됨 {kept}, 총 처리 {idx}.")
     df = pd.DataFrame(records)
     if "release_date" in df.columns:
         df["release_date"] = pd.to_datetime(df["release_date"], errors="coerce")
