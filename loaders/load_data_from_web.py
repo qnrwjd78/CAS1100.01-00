@@ -1,7 +1,3 @@
-"""
-Fetch SteamDB/Community enrichment for app_ids (best effort).
-If scraping fails, returns app_id-only DataFrame.
-"""
 from typing import Iterable, Optional, Dict, List
 
 import pandas as pd

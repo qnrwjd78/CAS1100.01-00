@@ -1,8 +1,3 @@
-"""
-Fetch store + SteamSpy metadata for a list of app_ids.
-
-Progress is printed every `progress_ratio` of total ids.
-"""
 from typing import List, Optional
 
 import numpy as np

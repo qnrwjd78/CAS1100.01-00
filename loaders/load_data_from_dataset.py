@@ -1,9 +1,3 @@
-"""
-Collect app_ids from review partition files.
-
-Reads CSVs matching a pattern (default: data/reviews/reviews-*.csv),
-pulls the `appid` column, de-duplicates, and stops after `max_ids`.
-"""
 from pathlib import Path
 from typing import List, Set
 
