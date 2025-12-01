@@ -51,11 +51,8 @@ def simple_regression(x: pd.Series, y: pd.Series) -> Dict[str, float]:
         return {"slope": np.nan, "intercept": np.nan, "r": np.nan}
     x_masked = x[mask]
     y_masked = y[mask]
-    if HAS_SCIPY:
-        slope, intercept, r, _, _ = stats.linregress(x_masked, y_masked)
-    else:
-        slope, intercept = np.polyfit(x_masked, y_masked, 1)
-        r = np.corrcoef(x_masked, y_masked)[0, 1]
+    slope, intercept = np.polyfit(x_masked, y_masked, 1)
+    r = np.corrcoef(x_masked, y_masked)[0, 1]
     return {"slope": slope, "intercept": intercept, "r": r}
 
 
@@ -63,8 +60,6 @@ def mannwhitney_p(sample_a: pd.Series, sample_b: pd.Series) -> float:
     a = sample_a.dropna()
     b = sample_b.dropna()
     if len(a) == 0 or len(b) == 0:
-        return np.nan
-    if not HAS_SCIPY:
         return np.nan
     _, p = stats.mannwhitneyu(a, b, alternative="two-sided")
     return p
